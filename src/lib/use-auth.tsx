@@ -25,14 +25,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // 初始化认证状态
   useEffect(() => {
+    let mounted = true;
+    
+    // 5 秒超时保护，防止 loading 状态永久卡住
+    const timeoutId = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn('[Auth] Loading timeout, forcing state update');
+        setLoading(false);
+      }
+    }, 5000);
+
     // 检查当前会话
-    supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
-      setUser(data.session?.user || null);
+    supabase.auth.getSession().then(({ data, error }: { data: { session: any }, error: any }) => {
+      if (!mounted) return;
+      clearTimeout(timeoutId);
+      
+      if (error) {
+        console.error('Session error:', error);
+      }
+      
+      const sessionUser = data.session?.user || null;
+      console.log('[Auth] Initial session:', sessionUser ? { email: sessionUser.email, id: sessionUser.id } : 'null');
+      
+      setUser(sessionUser);
+      setLoading(false);
+      
+      // 如果有用户，加载 profile
+      if (sessionUser) {
+        getCurrentProfile().then(setProfile).catch(console.error);
+      }
+    }).catch((err: any) => {
+      if (!mounted) return;
+      clearTimeout(timeoutId);
+      console.error('getSession failed:', err);
       setLoading(false);
     });
 
     // 监听认证状态变化
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
+      if (!mounted) return;
+      
+      console.log('[Auth] State change:', _event, session?.user?.email);
+      
       setUser(session?.user || null);
       
       if (session?.user) {
@@ -45,7 +79,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
