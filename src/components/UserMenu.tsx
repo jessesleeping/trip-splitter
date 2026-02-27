@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth } from '@/lib/use-auth.tsx';
+import { useAuth } from '@/lib/use-auth';
 import AuthModal from './AuthModal';
 import { User, LogOut, Settings, Sparkles } from 'lucide-react';
 

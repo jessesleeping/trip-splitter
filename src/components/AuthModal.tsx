@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth } from '@/lib/use-auth.tsx';
+import { useAuth } from '@/lib/use-auth';
 import { Mail, Lock, User, LogIn, UserPlus, X } from 'lucide-react';
 
 interface AuthModalProps {

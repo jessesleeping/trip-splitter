@@ -1,5 +1,5 @@
 import './globals.css'
-import { AuthProvider } from '@/lib/use-auth.tsx'
+import { AuthProvider } from '@/lib/use-auth'
 
 export const metadata = {
   title: 'Trip Splitter - 旅游分账',
