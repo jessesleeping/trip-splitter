@@ -26,13 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 初始化认证状态
   useEffect(() => {
     // 检查当前会话
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
+    supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      setUser(data.session?.user || null);
       setLoading(false);
     });
 
     // 监听认证状态变化
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
       setUser(session?.user || null);
       
       if (session?.user) {

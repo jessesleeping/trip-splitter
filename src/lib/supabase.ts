@@ -39,3 +39,13 @@ export const supabase = isSupabaseConfigured
     } as any;
 
 export { isSupabaseConfigured };
+
+// 数据库类型定义
+export interface Profile {
+  id: string;
+  email: string;
+  full_name?: string;
+  avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
+}

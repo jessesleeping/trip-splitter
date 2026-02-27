@@ -146,7 +146,7 @@ export async function resetPassword(email: string) {
  * 监听认证状态变化
  */
 export function onAuthStateChange(callback: (user: any) => void) {
-  return supabase.auth.onAuthStateChange((event, session) => {
+  return supabase.auth.onAuthStateChange((_event: any, session: any) => {
     callback(session?.user || null);
   });
 }
