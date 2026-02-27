@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/lib/use-auth.tsx';
+import { useAuth } from '@/lib/use-auth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 export default function TestPage() {
